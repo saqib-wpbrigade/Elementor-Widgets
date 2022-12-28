@@ -124,7 +124,7 @@ class Post_Widget extends \Elementor\Widget_Base{
                 </a>
                 <div class="content-col-slide">
                     <h6 class="post-title"><a
-                            href="<?php echo get_permalink(); ?>"><?php echo  preg_replace( '/((\w+\W*){'.(10-1).'}(\w+))(.*)/', '${1}', get_the_title() ); ?></a>
+                            href="<?php echo get_permalink(); ?>"><?php echo  get_the_title() ); ?></a>
                     </h6>
                     <div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
                     <div class="btn-wrp text-link">
