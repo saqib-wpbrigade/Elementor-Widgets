@@ -111,10 +111,10 @@ class Post_Widget extends \Elementor\Widget_Base{
 <div class="posts-slider-wrapper">
     <div class="container">
         <?php
-							while ( $post_query->have_posts() ) :
-								$post_query->the_post();
+			while ( $post_query->have_posts() ) :
+				$post_query->the_post();
 								
-						?>
+		?>
         <div class="swiper-slide single-post-wrp">
             <div class="post-single">
                 <a href="<?php echo get_permalink(); ?>" class="featured-img">
@@ -123,8 +123,7 @@ class Post_Widget extends \Elementor\Widget_Base{
                     <?php endif; ?>
                 </a>
                 <div class="content-col-slide">
-                    <h6 class="post-title"><a
-                            href="<?php echo get_permalink(); ?>"><?php echo  get_the_title()  ?></a>
+                    <h6 class="post-title"><a href="<?php echo get_permalink(); ?>"><?php echo  get_the_title()  ?></a>
                     </h6>
                     <div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
                     <div class="btn-wrp text-link">
@@ -134,36 +133,15 @@ class Post_Widget extends \Elementor\Widget_Base{
                 </div>
             </div>
         </div>
-        <?php
-									
-							endwhile;
-							?>;
+        <?php							
+		endwhile;
+		?>;
     </div>
 </div>
 <?php
 		
-			
-
-
-		}
+}
 	
-		
-		
-		
-		
-		
-		
-		
-            		
-
-    
-
-
-
-
-
-
-
 }
 
 }
