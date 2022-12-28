@@ -108,38 +108,38 @@ class Post_Widget extends \Elementor\Widget_Base{
 		if($post_query ->have_posts()){
 			
 			?>
-				<div class="posts-slider-wrapper">
-					<div class="container">
-						<?php
+<div class="posts-slider-wrapper">
+    <div class="container">
+        <?php
 							while ( $post_query->have_posts() ) :
 								$post_query->the_post();
 								
 						?>
-						<div class="swiper-slide single-post-wrp">
-							<div class="post-single">
-								<a href="<?php echo get_permalink(); ?>" class="featured-img">
-									<?php if ( has_post_thumbnail() ) : ?>
-									<?php the_post_thumbnail( 'medium' ); ?>
-									<?php endif; ?>
-								</a>
-								<div class="content-col-slide">
-									<h6 class="post-title"><a
-											href="<?php echo get_permalink(); ?>"><?php echo  preg_replace( '/((\w+\W*){'.(10-1).'}(\w+))(.*)/', '${1}', get_the_title() ); ?></a>
-									</h6>
-									<div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
-									<div class="btn-wrp text-link">
-										<a href="<?php echo get_permalink(); ?>" class="elementor-button">Read The <span
-												class="last">Story</span></a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<?php
+        <div class="swiper-slide single-post-wrp">
+            <div class="post-single">
+                <a href="<?php echo get_permalink(); ?>" class="featured-img">
+                    <?php if ( has_post_thumbnail() ) : ?>
+                    <?php the_post_thumbnail( 'medium' ); ?>
+                    <?php endif; ?>
+                </a>
+                <div class="content-col-slide">
+                    <h6 class="post-title"><a
+                            href="<?php echo get_permalink(); ?>"><?php echo  preg_replace( '/((\w+\W*){'.(10-1).'}(\w+))(.*)/', '${1}', get_the_title() ); ?></a>
+                    </h6>
+                    <div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
+                    <div class="btn-wrp text-link">
+                        <a href="<?php echo get_permalink(); ?>" class="elementor-button">Read The <span
+                                class="last">Story</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
 									
 							endwhile;
 							?>;
-					</div>
-				</div>
+    </div>
+</div>
 <?php
 		
 			
