@@ -64,8 +64,16 @@ class Post_Widget extends \Elementor\Widget_Base{
     //     return $student_posts;
 	// }
 
+
+	
+    
+
+	
+
     protected function register_controls()
 	{
+
+		
 
 		$this->start_controls_section(
 			'content_section',
@@ -74,6 +82,40 @@ class Post_Widget extends \Elementor\Widget_Base{
 				'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
 			]
 		);
+
+		$categories = get_categories(array(
+			'hide_empty' => 0,
+			'orderby' => 'name',
+			'order' => 'ASC'
+		  ));
+		  
+		  $options = array();
+		  
+		  foreach ($categories as $category) {
+			// $options[] =  $category->name;
+			// 'value' => strval($category->term_id),
+			$options[] = array(
+				'value' => strval($category->term_id),
+				'label' => strval($category->name)
+			  );
+ var_dump($options);
+			
+		  }
+
+		 
+		$this->add_control(
+				'category',
+				array(
+				'label' => __( 'Category', 'elementor' ),
+				'type' => \Elementor\Controls_Manager::SELECT2,
+				'options' => $options[0],
+				'multiple' => true,
+				)
+		);
+		  
+		  
+
+		
 
 		$this->add_control(
 			'demo_post_per_page_post',
@@ -96,6 +138,9 @@ class Post_Widget extends \Elementor\Widget_Base{
 
 		$settings = $this->get_settings_for_display();
 		$post_per_page = isset( $settings['demo_post_per_page_post'] ) && ! empty( $settings['demo_post_per_page_post'] ) ? $settings['demo_post_per_page_post'] : '';
+		
+		// var_dump($setting['category']);
+		
         $post_query = new WP_Query(
 			array(
 				'post_type'      => 'post',
@@ -111,10 +156,10 @@ class Post_Widget extends \Elementor\Widget_Base{
 <div class="posts-slider-wrapper">
     <div class="container">
         <?php
-			while ( $post_query->have_posts() ) :
-				$post_query->the_post();
-								
-		?>
+						while ( $post_query->have_posts() ) :
+							$post_query->the_post();
+											
+					?>
         <div class="swiper-slide single-post-wrp">
             <div class="post-single">
                 <a href="<?php echo get_permalink(); ?>" class="featured-img">
@@ -126,6 +171,7 @@ class Post_Widget extends \Elementor\Widget_Base{
                     <h6 class="post-title"><a href="<?php echo get_permalink(); ?>"><?php echo  get_the_title()  ?></a>
                     </h6>
                     <div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
+					<div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
                     <div class="btn-wrp text-link">
                         <a href="<?php echo get_permalink(); ?>" class="elementor-button">Read The <span
                                 class="last">Story</span></a>
@@ -134,8 +180,8 @@ class Post_Widget extends \Elementor\Widget_Base{
             </div>
         </div>
         <?php							
-		endwhile;
-		?>;
+					endwhile;
+					?>;
     </div>
 </div>
 <?php
