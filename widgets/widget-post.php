@@ -48,32 +48,26 @@ class Post_Widget extends \Elementor\Widget_Base{
 	 *
 	 * @return array The post categories.
 	 */
-	// public function get_students_list() {
-	// 	$student_posts = get_posts(
-	// 		array(
-	// 			'post_type'      => 'post',
-	// 		)
-	// 	);
-
-	// 	$student_post_list     = array();
-	// 	// $student_post_list[''] = __( 'All Student Posts', 'mccf' );
-	// 	// foreach ( $student_posts as $student_post ) {
-	// 	// 	$student_post_list[ $student_post->ID ] = $student_post->post_title;
-	// 	// }
-	// 	// return $student_post_list;
-    //     return $student_posts;
-	// }
-
-
-	
-    
-
 	
 
-    protected function register_controls()
-	{
+	public function get_post_list() {
+		$all_posts = get_posts(
+			array(
+				'post_type'      => 'post',
+				'posts_per_page' => '-1',
+				)
+		);
 
+		$post_list     = array();
 		
+		foreach ( $all_posts as $post_item ) {
+			$post_list[ $post_item->ID ] = $post_item->post_title;
+		}
+		return $post_list;
+	}
+	
+
+    protected function register_controls(){
 
 		$this->start_controls_section(
 			'content_section',
@@ -82,40 +76,18 @@ class Post_Widget extends \Elementor\Widget_Base{
 				'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
 			]
 		);
-
-		$categories = get_categories(array(
-			'hide_empty' => 0,
-			'orderby' => 'name',
-			'order' => 'ASC'
-		  ));
-		  
-		  $options = array();
-		  
-		  foreach ($categories as $category) {
-			// $options[] =  $category->name;
-			// 'value' => strval($category->term_id),
-			$options[] = array(
-				'value' => strval($category->term_id),
-				'label' => strval($category->name)
-			  );
- var_dump($options);
-			
-		  }
-
 		 
 		$this->add_control(
 				'category',
 				array(
 				'label' => __( 'Category', 'elementor' ),
 				'type' => \Elementor\Controls_Manager::SELECT2,
-				'options' => $options[0],
+				'options' => $this -> get_post_list(),
+				'default' => '',
+
 				'multiple' => true,
 				)
 		);
-		  
-		  
-
-		
 
 		$this->add_control(
 			'demo_post_per_page_post',
@@ -127,68 +99,79 @@ class Post_Widget extends \Elementor\Widget_Base{
 				'default' => esc_html__( '1', 'widget-test' ),
 			)
 		);
+
+		$this->add_control(
+			'category_not',
+			array(
+			'label' => __( 'Post Exclude', 'elementor' ),
+			'type' => \Elementor\Controls_Manager::SELECT2,
+			'options' => $this -> get_post_list(),
+			'default' => '',
+
+			'multiple' => true,
+			)
+	    );
         
         $this->end_controls_section();
 
     
     }
 
-    protected function render()
-	{
+    protected function render(){
 
 		$settings = $this->get_settings_for_display();
 		$post_per_page = isset( $settings['demo_post_per_page_post'] ) && ! empty( $settings['demo_post_per_page_post'] ) ? $settings['demo_post_per_page_post'] : '';
-		
-		// var_dump($setting['category']);
+		$exclude_post = isset( $settings['category_not'] ) && ! empty( $settings['category_not'] ) ? $settings['category_not'] : '';
+		$post_category=isset( $settings['category'] )  ? $settings['category'] : array();  
+
+	
 		
         $post_query = new WP_Query(
 			array(
 				'post_type'      => 'post',
 				'orderby' => 'publish_date',
 				'order' => 'DESC',
-				'posts_per_page' => $post_per_page,
+				'post__in'  => $post_category,
+				'post__not_in' =>$exclude_post,
+				'posts_per_page' => $post_per_page,	
 			)
 		);
 
 		if($post_query ->have_posts()){
-			
-			?>
-<div class="posts-slider-wrapper">
-    <div class="container">
+		?>
+			<div class="posts-slider-wrapper">
+				<div class="container">
+					<?php while ( $post_query->have_posts() ) : $post_query->the_post(); ?>
+					<div class="swiper-slide single-post-wrp">
+						<div class="post-single">
+							<a href="<?php echo get_permalink(); ?>" class="featured-img">
+								<?php if ( has_post_thumbnail() ) : ?>
+								<?php the_post_thumbnail( 'medium' ); ?>
+								<?php endif; ?>
+							</a>
+							<div class="content-col-slide">
+								<h6 class="post-title"><a href="<?php echo get_permalink(); ?>"><?php echo  get_the_title()  ?></a>
+								</h6>
+								<div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
+								<?php	$categories = get_the_category();
+									if ( ! empty( $categories ) ) {
+										echo 'Category: ' . esc_html( $categories[0]->name );
+									} ?>;
+
+								<div class="btn-wrp text-link">
+									<a href="<?php echo get_permalink(); ?>" class="elementor-button">Read The <span
+											class="last">Story</span></a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<?php endwhile; ?>;
+				</div>
+			</div>
         <?php
-						while ( $post_query->have_posts() ) :
-							$post_query->the_post();
-											
-					?>
-        <div class="swiper-slide single-post-wrp">
-            <div class="post-single">
-                <a href="<?php echo get_permalink(); ?>" class="featured-img">
-                    <?php if ( has_post_thumbnail() ) : ?>
-                    <?php the_post_thumbnail( 'medium' ); ?>
-                    <?php endif; ?>
-                </a>
-                <div class="content-col-slide">
-                    <h6 class="post-title"><a href="<?php echo get_permalink(); ?>"><?php echo  get_the_title()  ?></a>
-                    </h6>
-                    <div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
-					<div class="post-meta-date"><span><?php echo get_the_date( 'F D, Y' ); ?></span></div>
-                    <div class="btn-wrp text-link">
-                        <a href="<?php echo get_permalink(); ?>" class="elementor-button">Read The <span
-                                class="last">Story</span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php							
-					endwhile;
-					?>;
-    </div>
-</div>
-<?php
-		
-}
+       }
 	
-}
+    }
 
 }
 
